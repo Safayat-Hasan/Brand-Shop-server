@@ -78,12 +78,19 @@ async function run() {
 
     // cart
 
+    app.get('/cart', async (req, res) => {
+      const cursor = cartCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+    
     app.post('/cart', async (req, res) => {
       const cart = req.body;
       console.log(cart);
       const result = await cartCollection.insertOne(cart);
       res.send(result);
     })
+
 
 
 
