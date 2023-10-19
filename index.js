@@ -30,16 +30,46 @@ async function run() {
     const productCollection = client.db('productsDB').collection('products');
 
     app.get('/products', async (req, res) => {
-        const cursor = productCollection.find();
-        const result = await cursor.toArray();
-        res.send(result);
+      const cursor = productCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
     })
 
+    app.get('/products/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await productCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.get('/products/details/:brand', async (req, res) => {
+      const brand = req.params.brand;
+      const query = {
+        brand: brand
+      }
+      const result = await productCollection.find(query).toArray();
+      return res.send(result);
+    }) 
+
     app.post('/products', async (req, res) => {
-        const newProduct = req.body;
-        console.log(newProduct);
-        const result = await productCollection.insertOne(newProduct);
-        res.send(result);
+      const newProduct = req.body;
+      console.log(newProduct);
+      const result = await productCollection.insertOne(newProduct);
+      res.send(result);
+    })
+
+    app.put('/products/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedProduct = req.body;
+      const product = {
+        $set: {
+          name: updatedProduct.name, image: updatedProduct.image, brand: updatedProduct.brand, type: updatedProduct.type, price: updatedProduct.price, rating: updatedProduct.rating
+        }
+      }
+      const result = await productCollection.updateOne(filter, product, options);
+      res.send(result);
     })
 
 
@@ -58,9 +88,9 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send("Brand-shop server running")
+  res.send("Brand-shop server running")
 })
 
 app.listen(port, () => {
-    console.log(`Brand-shop server running on port: ${port}`)
+  console.log(`Brand-shop server running on port: ${port}`)
 })
