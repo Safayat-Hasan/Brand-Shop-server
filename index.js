@@ -6,6 +6,21 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors());
+// const corsOptions = {
+//   origin: '*',
+//   credentials: true,
+//   optionSuccessStatus: 200,
+// }
+
+// app.use(cors(corsOptions))
+// app.use(cors({
+//   origin: [
+//     // 'http://localhost:5173',
+//     'https://brand-shop-25fcf.web.app',
+//     'https://brand-shop-25fcf.firebaseapp.com',
+//   ],
+//   credentials: true,
+// }));
 app.use(express.json());
 
 
